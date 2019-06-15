@@ -9,12 +9,18 @@ Rails.application.routes.draw do
   delete "/logout", to: "sessions#destroy"
   get "products/index"
   get "products/show"
+  get "/cart", to: "carts#show"
+  post "/remove_item", to: "carts#remove_item"
+  post "/update_item", to: "carts#update_item"
+  delete "/cart", to: "carts#destroy"
 
+  resources :ratings, only: :create
   resources :users, except: %i(index destroy)
-  resources :products, only: %i(index show)
-  
+  resources :orders
+  resource :cart, only: [:show]
+  resources :order_items, only: %i(create update destroy)
   namespace :admin do
-    resources :users, only: %i(index destroy)
+    resources :users, except: %i(index destroy)
     resources :products
   end
 end

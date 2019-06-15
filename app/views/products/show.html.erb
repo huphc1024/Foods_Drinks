@@ -5,7 +5,7 @@
           <div class="card-body store-body">
             <div class="product-info">
               <div class="product-gallery">
-                <div class="product-gallery-thumbnails">
+                <%# <div class="product-gallery-thumbnails">
                   <ol class="thumbnails-list list-unstyled">
                     <li><img src="https://via.placeholder.com/350x350/ffcf5b" alt=""></li>
                     <li><img src="https://via.placeholder.com/350x350/f16a22" alt=""></li>
@@ -13,7 +13,7 @@
                     <li><img src="https://via.placeholder.com/350x350/7937fc" alt=""></li>
                     <li><img src="https://via.placeholder.com/350x350/930000" alt=""></li>
                   </ol>
-                </div>
+                </div> %>
                 <div class="product-gallery-featured">
                   <%= image_tag @product.image %>
                 </div>
@@ -22,7 +22,12 @@
             <div class="product-payment-details">
               <h4 class="product-title mb-2"><%= @product.name %></h4>
               <h2 class="product-price display-4"><%= number_to_currency @product.price %></h2>
-              <%= link_to t("edit"), edit_admin_product_path(@product), class: "btn btn-danger btn-sm" %>
+              <%= form_for :cart, url: update_item_path do |f| %>
+                <%= f.label :quantity, t("quantity") %>
+                <%= f.number_field :quantity, value: nil, min: Settings.min_quantity, class: "form-control mb-5 input-lg" %>
+                <%= f.hidden_field :id, value: @product.id %>
+                <%= f.submit t("buy_now"), class: "btn btn-primary btn-lg btn-block" %>
+              <% end %>
             </div>
           </div>
         </div>

@@ -1,15 +1,21 @@
 class Order < ApplicationRecord
+  enum status: %i(pending accepted cancelled)
   belongs_to :user
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
-  validates :name, presence: true, length: {maximum: Settings.name_length}
-  validates :price, presence: true, numericality: {only_integer: true}
-  validate :image_size
 
-  scope :newest, ->{order(created_at: :desc)}
+  before_create :set_order_status
 
-  mount_uploader :image, PictureUploader
+  def subtotal
+    order_items.collect { |oi| oi.valid? ? (oi.quantity * oi.price) : 0 }.sum
+  end
+
+  private
+  
+  def set_order_status
+    self.order_status_id = 1
+  end
 
   private
 
